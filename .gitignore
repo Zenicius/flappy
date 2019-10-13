@@ -1,3 +1,11 @@
+# Don't track content of these folders
+bin/
+.settings/
+
+# Untracked files
+.classpath
+.project
+
 # Compiled class file
 *.class
 

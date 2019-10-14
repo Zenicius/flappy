@@ -7,7 +7,7 @@ import java.awt.image.BufferedImage;
 import com.law.flappy.art.Animation;
 import com.law.flappy.art.Sprite;
 
-public class Bird {
+public class Bird{
 	
 	private int x, y;
 	private double rotationValue = 10;
@@ -20,11 +20,10 @@ public class Bird {
 	private Animation birdAnimation;
 	
 	public Bird(int x, int y) {
-		birdAnimation = new Animation(sprites, 5);
-		
 		this.x = x;
 		this.y = y;
 		
+		birdAnimation = new Animation(sprites, 5);
 		birdAnimation.start();
 	}
 	

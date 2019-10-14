@@ -2,8 +2,10 @@ package com.law.flappy;
 
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 import com.law.flappy.art.Sprite;
+import com.law.flappy.entities.Pipe;
 
 public class Level {
 	
@@ -23,16 +25,28 @@ public class Level {
 		ground2 = ground;
 	}
 	
-	public void tick() {
+	public void tick(double delta, boolean gameStarted, ArrayList<Pipe> pipes) {
 		groundX += velocity;
 		groundX = groundX % 420;
+		
+		if(gameStarted) {
+			for(int i = 0; i < pipes.size(); i++) {
+				pipes.get(i).tick(delta);
+			}
+		}
 	}
 	
-	public void render(Graphics2D g) {
+	public void render(Graphics2D g, boolean gameStarted, ArrayList<Pipe> pipes) {
 		g.drawImage(background, 0, 0, w_width, w_height, null);
-		g.drawImage(ground2, 420 - groundX, 570, 420, 150, null);
-		g.drawImage(ground, -groundX, 570, 420, 150, null);
 		
+		if(gameStarted) {
+			for(int i = 0; i < pipes.size(); i++) {
+				pipes.get(i).render(g);
+			}
+		}
+		
+		g.drawImage(ground2, 420 - groundX, 620, 420, 150, null);
+		g.drawImage(ground, -groundX, 620, 420, 150, null);
 	}
 	
 	

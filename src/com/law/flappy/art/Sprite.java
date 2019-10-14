@@ -12,7 +12,7 @@ public class Sprite {
 	
 	public static BufferedImage load(String path) {
 		try {
-			System.out.println("Loading: " + path);
+			//System.out.println("Loading: " + path);
 			BufferedImage image = ImageIO.read(new File(path));
 			sprite = image;
 			return sprite;

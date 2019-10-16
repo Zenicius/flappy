@@ -11,6 +11,7 @@ import com.law.flappy.entities.Pipe;
 import com.law.flappy.input.InputHandler;
 import com.law.flappy.menu.MainMenu;
 import com.law.flappy.menu.Menu;
+import com.law.flappy.util.Sound;
 
 public class FlappyBird {
 
@@ -23,6 +24,10 @@ public class FlappyBird {
 	private double time = 0;
 	
 	private boolean gameStarted = false;
+	private boolean gameOver = false;
+	
+	private boolean showHitboxes = false;
+	
 	private Random random = new Random();
 	
 	public FlappyBird(int w_width, int w_height) {
@@ -37,15 +42,17 @@ public class FlappyBird {
 		
 		bird = new Bird(30, 340);
 		generatePipes();
-	}
+	};
 	
 	public void generatePipes() {
 		Pipe pipeDown, pipeUp;
 		Pipe lastPipe = null;
 		int pipeY = 0;
-		while(pipeY < 20) {
-			pipeY = random.nextInt(400) + 1;
+		while(pipeY < 50) {
+			pipeY = (random.nextInt(430) + 1);
 		}
+		
+		pipeY = pipeY * -1;
 		
 		if(pipes.size() != 0) {
 			lastPipe = pipes.get(pipes.size() - 1);
@@ -71,32 +78,75 @@ public class FlappyBird {
 		}
 	}
 	
+	public void checkCollisions() {
+		if(bird.getHitbox().collision(level.getGroundHb())) {
+			if(!gameOver) Sound.hit.Play();
+			gameOver = true; 
+		}
+		
+		for(Pipe pipe: pipes) {
+			if(bird.getHitbox().collision(pipe.getHitbox())) {
+				if(!gameOver) Sound.hit.Play();
+				gameOver = true;
+			}
+		}
+	}
+	
+	public void toggleShowHb() {
+		bird.showHitbox(!this.showHitboxes);
+		level.showHitbox(!this.showHitboxes);
+		
+		this.showHitboxes = !this.showHitboxes;
+	}
+	
 	public void tick(InputHandler input, double delta) {
+		/*
+		 * INPUT
+		 */
 		boolean action = input.keys[KeyEvent.VK_SPACE];
+		boolean H = input.keys[KeyEvent.VK_H];
 		boolean clicked = input.mouseButtons[MouseEvent.BUTTON1];
 		int mouseX = input.mouseX; 
 		int mouseY = input.mouseY;
 		
 		
-		time += delta;
-		if(time > pipeSpawnTime && gameStarted) {
-			cleanPipes();
-			generatePipes();
-			time = 0;
-		}
+		/*
+		 * LEVEL 
+		 */
+		level.tick(delta, gameStarted, gameOver, pipes);
 		
-		level.tick(delta, gameStarted, pipes);
-		
+		/*
+		 * MENU
+		 */
 		if(menu != null) {
 			if(clicked) input.mouseButtons[MouseEvent.BUTTON1] = false;
 			
 			menu.tick(clicked, mouseX, mouseY, this);
 		}
 		
-		if(bird != null) {
-			if(clicked) input.mouseButtons[MouseEvent.BUTTON1] = false;
+		/*
+		 * GAME
+		 */
+		if(gameStarted) {
 			
-			bird.tick(action, clicked, delta);
+			if(clicked) input.mouseButtons[MouseEvent.BUTTON1] = false;
+			if(H)  {
+				input.keys[KeyEvent.VK_H] = false;
+				toggleShowHb();
+			}
+			
+			checkCollisions();
+			bird.tick(action, clicked, gameOver, delta);
+		}
+		
+		/*
+		 * PIPES
+		 */
+		time += delta;
+		if(time > pipeSpawnTime && gameStarted) {
+			cleanPipes();
+			generatePipes();
+			time = 0;
 		}
 	}
 	
@@ -111,7 +161,6 @@ public class FlappyBird {
 		if(bird != null) {
 			bird.render(g);
 		}
-	
 		
 	}
 	

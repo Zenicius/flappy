@@ -5,6 +5,7 @@ import java.awt.image.BufferedImage;
 
 import com.law.flappy.FlappyBird;
 import com.law.flappy.art.Sprite;
+import com.law.flappy.util.Sound;
 
 public class MainMenu extends Menu {
 	
@@ -21,6 +22,7 @@ public class MainMenu extends Menu {
 	public void tick(boolean clicked, int mouseX, int mouseY, FlappyBird game) {
 		if(clicked) {
 			if(mouseX > 160 && mouseX < 280 && mouseY > 275 && mouseY <  317) {
+				Sound.swooshing.Play();
 				game.startGame();
 			}
 		}

@@ -9,6 +9,7 @@ import java.util.Random;
 import com.law.flappy.entities.Bird;
 import com.law.flappy.entities.Pipe;
 import com.law.flappy.input.InputHandler;
+import com.law.flappy.menu.GameOverMenu;
 import com.law.flappy.menu.MainMenu;
 import com.law.flappy.menu.Menu;
 import com.law.flappy.util.Sound;
@@ -43,6 +44,13 @@ public class FlappyBird {
 		bird = new Bird(30, 340);
 		generatePipes();
 	};
+	
+	public void gameOver() {
+		if(!gameOver) Sound.hit.Play();
+		this.gameOver = true;
+		
+		setMenu(new GameOverMenu());
+	}
 	
 	public void generatePipes() {
 		Pipe pipeDown, pipeUp;
@@ -79,15 +87,15 @@ public class FlappyBird {
 	}
 	
 	public void checkCollisions() {
-		if(bird.getHitbox().collision(level.getGroundHb())) {
-			if(!gameOver) Sound.hit.Play();
-			gameOver = true; 
+		if(bird.getHitbox().collision(level.getGroundHb())) {	
+			bird.stopMovement();
+	
+			if(!gameOver) gameOver();
 		}
 		
 		for(Pipe pipe: pipes) {
 			if(bird.getHitbox().collision(pipe.getHitbox())) {
-				if(!gameOver) Sound.hit.Play();
-				gameOver = true;
+				if(!gameOver) gameOver();
 			}
 		}
 	}
@@ -121,7 +129,7 @@ public class FlappyBird {
 		if(menu != null) {
 			if(clicked) input.mouseButtons[MouseEvent.BUTTON1] = false;
 			
-			menu.tick(clicked, mouseX, mouseY, this);
+			menu.tick(delta, clicked, mouseX, mouseY, this);
 		}
 		
 		/*

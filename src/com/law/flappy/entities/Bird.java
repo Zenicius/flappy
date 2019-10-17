@@ -24,11 +24,14 @@ public class Bird{
 	private Hitbox hb;
 	private boolean showHitbox = false;
 	
+	private boolean stopMovement = false;
+	
 	public Bird(int x, int y) {
 		this.x = x;
 		this.y = y;
+
 		
-		hb = new Hitbox(x, y, x + 41, y + 26);
+		hb = new Hitbox(x, y, x + 51, y + 36);
 		
 		birdAnimation = new Animation(sprites, 5);
 		birdAnimation.start();
@@ -40,6 +43,7 @@ public class Bird{
 	}
 	
 	public void tick(boolean action, boolean clicked, boolean gameOver, double delta) {
+		if(stopMovement) return;
 		if(!gameOver) birdAnimation.tick();
 		
 		velocity += G * delta;
@@ -47,7 +51,7 @@ public class Bird{
 		
 		if(clicked && !gameOver) flap();
 		
-		hb.tick(x, y, x + 41, y + 26);
+		hb.tick(x, y, x + 51, y + 36);
 	}
 	
 	public void render(Graphics2D g) {
@@ -65,6 +69,10 @@ public class Bird{
 	
 	public void showHitbox(boolean option) {
 		this.showHitbox = option;
+	}
+	
+	public void stopMovement() {
+		this.stopMovement = true;
 	}
 
 }

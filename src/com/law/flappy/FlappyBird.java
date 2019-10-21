@@ -12,15 +12,18 @@ import com.law.flappy.input.InputHandler;
 import com.law.flappy.menu.GameOverMenu;
 import com.law.flappy.menu.MainMenu;
 import com.law.flappy.menu.Menu;
+import com.law.flappy.util.Score;
 import com.law.flappy.util.Sound;
 
 public class FlappyBird {
 
 	private Menu menu;
 	private Level level; 
+	private Score score;
 	
 	private Bird bird;
 	private ArrayList<Pipe> pipes = new ArrayList<Pipe>();
+	private Pipe nextPipe;
 	private double pipeSpawnTime = 100;
 	private double time = 0;
 	
@@ -41,15 +44,38 @@ public class FlappyBird {
 		setMenu(null);
 		gameStarted = true;
 		
+		score = new Score();
 		bird = new Bird(30, 340);
 		generatePipes();
+		
+		nextPipe = pipes.get(0);
 	};
+	
+	public void resetGame() {
+		gameStarted = false;
+		gameOver = false;
+		bird = null;
+		
+		pipes.clear();
+		
+		setMenu(new MainMenu());
+	}
+	
+	public void retry() {
+		gameStarted = false;
+		gameOver = false;
+		bird = null;
+		
+		pipes.clear();
+		
+		startGame();
+	}
 	
 	public void gameOver() {
 		if(!gameOver) Sound.hit.Play();
 		this.gameOver = true;
 		
-		setMenu(new GameOverMenu());
+		setMenu(new GameOverMenu(score));
 	}
 	
 	public void generatePipes() {
@@ -100,6 +126,13 @@ public class FlappyBird {
 		}
 	}
 	
+	public void checkScore() {
+		if(bird.getX() > nextPipe.getX() + 30) {
+			score.increase();
+			nextPipe = pipes.get(pipes.indexOf(nextPipe) + 2);
+		}
+	}
+	
 	public void toggleShowHb() {
 		bird.showHitbox(!this.showHitboxes);
 		level.showHitbox(!this.showHitboxes);
@@ -143,6 +176,7 @@ public class FlappyBird {
 				toggleShowHb();
 			}
 			
+			checkScore();
 			checkCollisions();
 			bird.tick(action, clicked, gameOver, delta);
 		}
@@ -160,16 +194,31 @@ public class FlappyBird {
 	
 	public void render(Graphics2D g) {
 		
+		/*
+		 * LEVEL
+		 */
 		level.render(g, gameStarted, pipes);
 		
-		if(menu != null) {
-			menu.render(g);
+		/*
+		 * SCORE
+		 */
+		if(gameStarted && !gameOver) {
+			score.render(g, false);
 		}
 		
-		if(bird != null) {
+		/*
+		 * GAME
+		 */
+		if(gameStarted) {
 			bird.render(g);
 		}
 		
+		/*
+		 * MENU
+		 */
+		if(menu != null) {
+			menu.render(g);
+		}
 	}
 	
 	public void setMenu(Menu menu) {

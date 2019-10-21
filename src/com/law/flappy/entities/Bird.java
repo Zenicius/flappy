@@ -30,7 +30,6 @@ public class Bird{
 		this.x = x;
 		this.y = y;
 
-		
 		hb = new Hitbox(x, y, x + 51, y + 36);
 		
 		birdAnimation = new Animation(sprites, 5);
@@ -61,6 +60,14 @@ public class Bird{
 		g.rotate(Math.atan(velocity / rotationValue), x + 51 / 2, y + 36 / 2);
 		g.drawImage(birdAnimation.getSprite(), x, y, 51, 36, null);
 		g.setTransform(Tx);
+	}
+	
+	public int getX() {
+		return this.x;
+	}
+	
+	public int getY() {
+		return this.y;
 	}
 	
 	public Hitbox getHitbox() {

@@ -35,7 +35,7 @@ public class InputHandler implements KeyListener, MouseListener {
 			mouseY = e.getY();
 			mouseButtons[mouseCode] = true;
 		}
-		
+
 	}
 
 	@Override

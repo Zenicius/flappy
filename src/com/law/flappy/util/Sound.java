@@ -11,13 +11,14 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 public class Sound {
-
+	
+	public static boolean muted = false;
 	
 	public static Sound wing = load("/sfx_wing.wav");
 	public static Sound swooshing = load("/sfx_swooshing.wav");
 	public static Sound hit = load("/sfx_hit.wav");
 	public static Sound point = load("/sfx_point.wav");
-	
+
 	private Clip clip;
 
 	public static Sound load(String path) {

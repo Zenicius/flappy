@@ -38,7 +38,7 @@ public class Hitbox {
 		int width = (int)xBottomRight - (int)xTopLeft;
 		int height = (int)yBottomRight - (int) yTopLeft;
 		
-		
+
 		g.setColor(Color.RED);
 		g.drawRect(x, y, width, height);
 	}

@@ -22,7 +22,7 @@ public class Score {
 	}
 
 	public void increase() {
-		Sound.point.Play();
+		if(!Sound.muted) Sound.point.Play();
 		this.score ++;
 	}
 
@@ -42,7 +42,7 @@ public class Score {
 
 		String aux = Integer.toString(score);
 		int z = 1;
-		int currentX = startX;//- (aux.length() * 25) + 25;
+		int currentX = startX;
 		
 		System.out.println("" + startX);
 		

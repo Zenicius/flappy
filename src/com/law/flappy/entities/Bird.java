@@ -38,7 +38,7 @@ public class Bird{
 	
 	public void flap() {
 		velocity = flapValue;
-		Sound.wing.Play();
+		if(!Sound.muted) Sound.wing.Play();
 	}
 	
 	public void tick(boolean action, boolean clicked, boolean gameOver, double delta) {

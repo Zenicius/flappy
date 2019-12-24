@@ -72,7 +72,7 @@ public class FlappyBird {
 	}
 	
 	public void gameOver() {
-		if(!gameOver) Sound.hit.Play();
+		if(!gameOver && !Sound.muted) Sound.hit.Play();
 		this.gameOver = true;
 		
 		setMenu(new GameOverMenu(score));
